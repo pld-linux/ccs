@@ -1,6 +1,5 @@
-#
-# Conditional build:
-Summary:	cluster configuration system to manage the cluster config file
+Summary:	Cluster configuration system to manage the cluster config file
+Summary(pl):	System konfiguracji klastra do zarz±dzania jego plikiem konfiguracyjnym
 Name:		ccs
 %define	snap	20040625
 Version:	0.0.0.%{snap}.1
@@ -16,14 +15,21 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_sbindir	/sbin
 
 %description
-cluster configuration system to manage the cluster config file.
+Cluster configuration system to manage the cluster config file.
+
+%description -l pl
+System konfiguracji klastra do zarz±dzania jego plikiem konfiguracyjnym.
 
 %package devel
-Summary:        Header files and development documentation for %{name}
+Summary:        Header files and static library for ccs
+Summary(pl):	Pliki nag³ówkowe i biblioteka statyczna ccs
 Group:          Development/Libraries
 
 %description devel
-Header files and development documentation for %{name}.
+Header files and static library for ccs.
+
+%description devel -l pl
+Pliki nag³ówkowe i biblioteka statyczna ccs.
 
 %prep
 %setup -q -n %{name}
