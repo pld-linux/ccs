@@ -51,12 +51,17 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+install -d $RPM_BUILD_ROOT/etc/cluster
+touch $RPM_BUILD_ROOT/etc/cluster/cluster.xml
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/*
+%dir /etc/cluster
+%attr(640,root,root) %config(noreplace) %verify(not md5 size mtime) /etc/cluster/cluster.xml
 
 %files devel
 %defattr(644,root,root,755)
