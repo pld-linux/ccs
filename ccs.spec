@@ -21,9 +21,9 @@ Cluster configuration system to manage the cluster config file.
 System konfiguracji klastra do zarz±dzania jego plikiem konfiguracyjnym.
 
 %package devel
-Summary:        Header files and static library for ccs
+Summary:	Header files and static library for ccs
 Summary(pl):	Pliki nag³ówkowe i biblioteka statyczna ccs
-Group:          Development/Libraries
+Group:		Development/Libraries
 
 %description devel
 Header files and static library for ccs.
