@@ -8,7 +8,7 @@ License:	GPL
 Group:		Applications/System
 Source0:	%{name}.tar.gz
 # Source0-md5:	9c119853aac17437bf0b05cbb8a37117
-URL:		http://sources.redhat.com/cluster/
+URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	libxml-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
