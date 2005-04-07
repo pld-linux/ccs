@@ -1,13 +1,12 @@
 Summary:	Cluster configuration system to manage the cluster config file
 Summary(pl):	System konfiguracji klastra do zarz±dzania jego plikiem konfiguracyjnym
 Name:		ccs
-%define	snap	20040625
-Version:	0.0.0.%{snap}.1
-Release:	1
+Version:	0.24
+Release:	0.1
 License:	GPL
 Group:		Applications/System
-Source0:	%{name}.tar.gz
-# Source0-md5:	9c119853aac17437bf0b05cbb8a37117
+Source0:	http://people.redhat.com/cfeist/cluster/tgz/%{name}-%{version}.tar.gz
+# Source0-md5:	1df515f83510b4f5d9c0c5f70e8503cf
 URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	libxml-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -18,7 +17,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Cluster configuration system to manage the cluster config file.
 
 %description -l pl
-System konfiguracji klastra do zarz±dzania jego plikiem konfiguracyjnym.
+System konfiguracji klastra do zarz±dzania jego plikiem
+konfiguracyjnym.
 
 %package devel
 Summary:	Header files and static library for ccs
@@ -32,7 +32,7 @@ Header files and static library for ccs.
 Pliki nag³ówkowe i biblioteka statyczna ccs.
 
 %prep
-%setup -q -n %{name}
+%setup -q
 
 %build
 ./configure \
@@ -51,8 +51,8 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/etc/cluster
-touch $RPM_BUILD_ROOT/etc/cluster/cluster.xml
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/cluster
+touch $RPM_BUILD_ROOT%{_sysconfdir}/cluster/cluster.xml
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -60,8 +60,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/*
-%dir /etc/cluster
-%attr(640,root,root) %config(noreplace) %verify(not md5 size mtime) /etc/cluster/cluster.xml
+%dir %{_sysconfdir}/cluster
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cluster/cluster.xml
 
 %files devel
 %defattr(644,root,root,755)
