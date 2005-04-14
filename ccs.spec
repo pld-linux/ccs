@@ -3,12 +3,14 @@ Summary(pl):	System konfiguracji klastra do zarz±dzania jego plikiem konfiguracy
 Name:		ccs
 Version:	0.24
 Release:	0.1
-License:	GPL
+License:	GPL v2
 Group:		Applications/System
 Source0:	http://people.redhat.com/cfeist/cluster/tgz/%{name}-%{version}.tar.gz
 # Source0-md5:	1df515f83510b4f5d9c0c5f70e8503cf
 URL:		http://sources.redhat.com/cluster/ccs/
-BuildRequires:	libxml-devel
+BuildRequires:	libxml2-devel >= 2.0
+BuildRequires:	magma-devel >= 1.0
+BuildRequires:	perl-base
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -24,6 +26,7 @@ konfiguracyjnym.
 Summary:	Header files and static library for ccs
 Summary(pl):	Pliki nag³ówkowe i biblioteka statyczna ccs
 Group:		Development/Libraries
+# doesn't require base
 
 %description devel
 Header files and static library for ccs.
@@ -34,10 +37,11 @@ Pliki nag³ówkowe i biblioteka statyczna ccs.
 %prep
 %setup -q
 
+%{__perl} -pi -e 's/-O2/%{rpmcflags}/' {ccs_tool,ccs_test,lib,daemon}/Makefile
+
 %build
 ./configure \
 	--incdir=%{_includedir} \
-	--kernel_src=%{_kernelsrcdir} \
 	--libdir=%{_libdir} \
 	--mandir=%{_mandir} \
 	--prefix=%{_prefix} \
@@ -62,8 +66,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/*
 %dir %{_sysconfdir}/cluster
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cluster/cluster.xml
+%{_mandir}/man5/cluster.conf.5*
+%{_mandir}/man7/ccs.7*
+%{_mandir}/man8/ccs*.8*
+#%attr(754,root,root) /etc/rc.d/init.d/ccsd
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/*.h
-%{_libdir}/*.a
+%{_includedir}/ccs.h
+%{_libdir}/libccs.a
