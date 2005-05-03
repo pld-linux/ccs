@@ -2,7 +2,7 @@ Summary:	Cluster configuration system to manage the cluster config file
 Summary(pl):	System konfiguracji klastra do zarz±dzania jego plikiem konfiguracyjnym
 Name:		ccs
 Version:	0.24
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	http://people.redhat.com/cfeist/cluster/tgz/%{name}-%{version}.tar.gz
