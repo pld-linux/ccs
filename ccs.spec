@@ -1,12 +1,12 @@
 Summary:	Cluster configuration system to manage the cluster config file
 Summary(pl):	System konfiguracji klastra do zarz±dzania jego plikiem konfiguracyjnym
 Name:		ccs
-Version:	0.24
+Version:	1.01.00
 Release:	1
 License:	GPL v2
 Group:		Applications/System
-Source0:	http://people.redhat.com/cfeist/cluster/tgz/%{name}-%{version}.tar.gz
-# Source0-md5:	1df515f83510b4f5d9c0c5f70e8503cf
+Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
+# Source0-md5:	e98551b02ee8ed46ae0ab8fca193d751
 URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	libxml2-devel >= 2.0
 BuildRequires:	magma-devel >= 1.0
@@ -35,11 +35,12 @@ Header files and static library for ccs.
 Pliki nag³ówkowe i biblioteka statyczna ccs.
 
 %prep
-%setup -q
-
+%setup -q -n cluster-%{version}
+cd %{name}
 %{__perl} -pi -e 's/-O2/%{rpmcflags}/' {ccs_tool,ccs_test,lib,daemon}/Makefile
 
 %build
+cd %{name}
 ./configure \
 	--incdir=%{_includedir} \
 	--libdir=%{_libdir} \
@@ -51,6 +52,7 @@ Pliki nag³ówkowe i biblioteka statyczna ccs.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+cd %{name}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
