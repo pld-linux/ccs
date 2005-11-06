@@ -7,6 +7,8 @@ License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
 # Source0-md5:	e98551b02ee8ed46ae0ab8fca193d751
+Source1:	%{name}.init
+Source2:	%{name}.sysconfig
 URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	libxml2-devel >= 2.0
 BuildRequires:	magma-devel >= 1.0
@@ -53,6 +55,7 @@ cd %{name}
 %install
 rm -rf $RPM_BUILD_ROOT
 cd %{name}
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -60,8 +63,27 @@ cd %{name}
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/cluster
 touch $RPM_BUILD_ROOT%{_sysconfdir}/cluster/cluster.xml
 
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post
+/sbin/chkconfig --add %{name}
+if [ -f /var/lock/subsys/%{name} ]; then
+        /etc/rc.d/init.d/%{name} restart 1>&2
+else
+        echo "Type \"/etc/rc.d/init.d/%{name} start\" to start %{name}" 1>&2
+fi
+
+%preun
+if [ "$1" = "0" ]; then
+        if [ -f /var/lock/subsys/%{name} ]; then
+                /etc/rc.d/init.d/%{name} stop >&2
+        fi
+        /sbin/chkconfig --del %{name}
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -71,7 +93,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/cluster.conf.5*
 %{_mandir}/man7/ccs.7*
 %{_mandir}/man8/ccs*.8*
-#%attr(754,root,root) /etc/rc.d/init.d/ccsd
+%attr(754,root,root) /etc/rc.d/init.d/%{name}
+%attr(640,root,root) %config(noreplace) %verify(not mtime md5 size) /etc/sysconfig/%{name}
 
 %files devel
 %defattr(644,root,root,755)
