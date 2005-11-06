@@ -1,0 +1,73 @@
+#!/bin/sh
+#
+# ccsd		ccsd
+#
+# chkconfig:	2345 20 80
+# description:	ccsd
+#		
+# processname:	ccsd
+# config:	
+# pidfile:
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Source oident configureation.
+[ -f /etc/sysconfig/ccsd ] && . /etc/sysconfig/ccsd
+
+# Check that networking is up.
+if is_yes "${NETWORKING}"; then
+	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status ]; then
+		msg_network_down ccsd
+		exit 1
+	fi
+else
+	exit 0
+fi
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+	# Start daemons.
+	if [ ! -f /var/lock/subsys/ccsd ]; then
+		msg_starting ccsd
+		daemon ccsd $CCSD_OPTS
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/ccsd
+	else
+		msg_already_running ccsd
+	fi
+	;;
+  stop)
+	# Stop daemons.
+	if [ -f /var/lock/subsys/ccsd ]; then
+		msg_stopping ccsd
+		killproc ccsd
+		rm -f /var/lock/subsys/ccsd >/dev/null 2>&1
+	else
+		msg_not_running ccsd
+	fi	
+	;;
+  restart|force-reload)
+	$0 stop
+	$0 start
+	exit $?
+	;;
+  status)
+	status ccsd
+	exit $?
+	;;
+#  reload)
+#	msg_reloading ccsd
+#	killproc ccsd -HUP
+#	;;
+  *)
+	msg_usage "$0 {start|stop|restart|force-reload|status}"
+	exit 3
+esac
+
+exit $RETVAL
