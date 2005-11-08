@@ -11,8 +11,9 @@ Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	libxml2-devel >= 2.0
-BuildRequires:	magma-devel >= 1.0
+BuildRequires:	magma-devel >= 0:1.01
 BuildRequires:	perl-base
+Requires:	magma >= 0:1.01
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -94,7 +95,7 @@ fi
 %{_mandir}/man7/ccs.7*
 %{_mandir}/man8/ccs*.8*
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
-%attr(640,root,root) %config(noreplace) %verify(not mtime md5 size) /etc/sysconfig/%{name}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 
 %files devel
 %defattr(644,root,root,755)
