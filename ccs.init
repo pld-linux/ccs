@@ -4,9 +4,9 @@
 #
 # chkconfig:	2345 20 80
 # description:	ccsd
-#		
+#
 # processname:	ccsd
-# config:	
+# config:
 # pidfile:
 
 # Source function library.
@@ -50,7 +50,7 @@ case "$1" in
 		rm -f /var/lock/subsys/ccsd >/dev/null 2>&1
 	else
 		msg_not_running ccsd
-	fi	
+	fi
 	;;
   restart|force-reload)
 	$0 stop
