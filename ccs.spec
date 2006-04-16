@@ -12,9 +12,11 @@ Source2:	%{name}.sysconfig
 URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	libxml2-devel >= 2.0
 BuildRequires:	magma-devel >= 0:1.01
-BuildRequires:	sed >= 4.0
 BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	sed >= 4.0
+Requires(post,preun):	/sbin/chkconfig
 Requires:	magma >= 0:1.01
+Requires:	rc-scripts
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
