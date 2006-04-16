@@ -12,7 +12,8 @@ Source2:	%{name}.sysconfig
 URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	libxml2-devel >= 2.0
 BuildRequires:	magma-devel >= 0:1.01
-BuildRequires:	perl-base
+BuildRequires:	sed >= 4.0
+BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	magma >= 0:1.01
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -40,7 +41,7 @@ Pliki nag³ówkowe i biblioteka statyczna ccs.
 %prep
 %setup -q -n cluster-%{version}
 cd %{name}
-%{__perl} -pi -e 's/-O2/%{rpmcflags}/' {ccs_tool,ccs_test,lib,daemon}/Makefile
+%{__sed} -i -e 's/-O2/%{rpmcflags}/' {ccs_tool,ccs_test,lib,daemon}/Makefile
 
 %build
 cd %{name}
@@ -72,18 +73,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add %{name}
-if [ -f /var/lock/subsys/%{name} ]; then
-        /etc/rc.d/init.d/%{name} restart 1>&2
-else
-        echo "Type \"/etc/rc.d/init.d/%{name} start\" to start %{name}" 1>&2
-fi
+%service %{name} restart
 
 %preun
 if [ "$1" = "0" ]; then
-        if [ -f /var/lock/subsys/%{name} ]; then
-                /etc/rc.d/init.d/%{name} stop >&2
-        fi
-        /sbin/chkconfig --del %{name}
+	%service %{name} stop
+	/sbin/chkconfig --del %{name}
 fi
 
 %files
