@@ -1,0 +1,103 @@
+diff -Nur cluster-1.02.00.orig/ccs/ccs_test/Makefile cluster-1.02.00.optflags/ccs/ccs_test/Makefile
+--- cluster-1.02.00.orig/ccs/ccs_test/Makefile	2005-02-11 18:30:44.000000000 +0100
++++ cluster-1.02.00.optflags/ccs/ccs_test/Makefile	2006-08-04 02:47:34.000000000 +0200
+@@ -19,14 +19,13 @@
+ INCLUDE+= -I. -I${top_srcdir}/include -I${ccs_libdir} -I${top_srcdir}/config
+ 
+ ifeq ($(DEBUG),y)
+-CFLAGS+= -O2 -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DDEBUG -g \
++CFLAGS+= $(OPTCFLAGS) -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DDEBUG -g \
+ 	-DCCS_RELEASE_NAME=\"${RELEASE}\"
+ else
+-CFLAGS+= -O2 -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DCCS_RELEASE_NAME=\"${RELEASE}\"
++CFLAGS+= $(OPTCFLAGS) -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DCCS_RELEASE_NAME=\"${RELEASE}\"
+ endif
+ 
+-LDFLAGS+= -L${ccs_libdir}
+-LOADLIBES+= -lccs
++LOADLIBES+= -L${ccs_libdir} -lccs
+ 
+ all: ccs_test
+ 
+@@ -34,7 +33,7 @@
+ 	cp ccs_test ${top_srcdir}/bin
+ 
+ ccs_test: ccs_test.c ${ccs_libdir}/libccs.a
+-	${CC} ${CFLAGS} ${INCLUDE} ccs_test.c ${LDFLAGS} ${LOADLIBES} ${LDLIBS}-o $@
++	${CC} ${CFLAGS} ${INCLUDE} ${LDFLAGS} ccs_test.c ${LOADLIBES} ${LDLIBS} -o $@
+ 
+ ${ccs_libdir}/libccs.a:
+ 	cd ${ccs_libdir} && ${MAKE} libccs.a
+diff -Nur cluster-1.02.00.orig/ccs/ccs_tool/Makefile cluster-1.02.00.optflags/ccs/ccs_tool/Makefile
+--- cluster-1.02.00.orig/ccs/ccs_tool/Makefile	2005-05-12 17:17:39.000000000 +0200
++++ cluster-1.02.00.optflags/ccs/ccs_tool/Makefile	2006-08-04 02:48:38.000000000 +0200
+@@ -17,20 +17,20 @@
+ INCLUDE= -I. -I${top_srcdir}/config -I${top_srcdir}/include -I${ccs_libdir} -I${incdir}
+ 
+ ifeq ($(DEBUG),y)
+-CFLAGS+= -Wall -O2 -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DDEBUG -g \
++CFLAGS+= -Wall $(OPTCFLAGS) -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DDEBUG -g \
+         `xml2-config --cflags` -DCCS_RELEASE_NAME=\"${RELEASE}\"
+ else
+-CFLAGS+= -Wall -O2 -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE \
++CFLAGS+= -Wall $(OPTCFLAGS) -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE \
+         `xml2-config --cflags` -DCCS_RELEASE_NAME=\"${RELEASE}\"
+ endif
+ 
+-LDFLAGS+= -L${ccs_libdir} `xml2-config --libs` -L${libdir}
++LOADLIBES+= -L${ccs_libdir} `xml2-config --libs` -L${libdir}
+ LOADLIBES+= -lccs -lmagma -lmagmamsg -ldl
+ 
+ all: ccs_tool
+ 
+ ccs_tool: ccs_tool.c update.c upgrade.c old_parser.c editconf.c
+-	${CC} ${CFLAGS} ${INCLUDE} -o $@ $^ ${LDFLAGS} ${LOADLIBES}
++	${CC} ${CFLAGS} ${LDFLAGS} ${INCLUDE} -o $@ $^ ${LOADLIBES}
+ 
+ clean:
+ 	rm -f *.o ccs_tool *~
+diff -Nur cluster-1.02.00.orig/ccs/daemon/Makefile cluster-1.02.00.optflags/ccs/daemon/Makefile
+--- cluster-1.02.00.orig/ccs/daemon/Makefile	2004-10-19 01:00:39.000000000 +0200
++++ cluster-1.02.00.optflags/ccs/daemon/Makefile	2006-08-04 02:43:07.000000000 +0200
+@@ -18,14 +18,14 @@
+ INCLUDE= -I. -I../include -I../common -I${top_srcdir}/config -I${incdir}
+ 
+ ifeq ($(DEBUG),y)
+-CFLAGS+= -Wall -O2 -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DDEBUG -g \
++CFLAGS+= -Wall $(OPTCFLAGS) -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DDEBUG -g \
+ 	`xml2-config --cflags` -DCCS_RELEASE_NAME=\"${RELEASE}\"
+ else
+-CFLAGS+= -Wall -O2 -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE \
++CFLAGS+= -Wall $(OPTCFLAGS) -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE \
+ 	`xml2-config --cflags` -DCCS_RELEASE_NAME=\"${RELEASE}\"
+ endif
+ 
+-LDFLAGS+= -L${libdir} `xml2-config --libs` -lpthread -lmagma -lmagmamsg -ldl
++LIBS += -L${libdir} `xml2-config --libs` -lpthread -lmagma -lmagmamsg -ldl
+ 
+ all: ccsd
+ 
+@@ -33,7 +33,7 @@
+ 	cp ccsd ${top_srcdir}/bin
+ 
+ ccsd: ccsd.c cnx_mgr.c cluster_mgr.c misc.c ../common/log.c globals.c
+-	${CC} ${CFLAGS} ${INCLUDE} -o $@ $^ ${LDFLAGS}
++	${CC} ${CFLAGS} ${LDFLAGS} ${INCLUDE} -o $@ $^ ${LIBS}
+ 
+ install: ccsd
+ 	install -d ${sbindir}
+diff -Nur cluster-1.02.00.orig/ccs/lib/Makefile cluster-1.02.00.optflags/ccs/lib/Makefile
+--- cluster-1.02.00.orig/ccs/lib/Makefile	2004-08-03 18:39:14.000000000 +0200
++++ cluster-1.02.00.optflags/ccs/lib/Makefile	2006-08-04 02:44:51.000000000 +0200
+@@ -17,9 +17,9 @@
+ INCLUDE = -I../include -I../common
+ 
+ ifeq ($(DEBUG),y)
+-CFLAGS+= -O2 -D_FILE_OFFSET_BITS=64 -DDEBUG -g
++CFLAGS+= $(OPTCFLAGS) -D_FILE_OFFSET_BITS=64 -DDEBUG -g
+ else
+-CFLAGS+= -O2 -D_FILE_OFFSET_BITS=64
++CFLAGS+= $(OPTCFLAGS) -D_FILE_OFFSET_BITS=64
+ endif
+  
+ all: libccs.a
