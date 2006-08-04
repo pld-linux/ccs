@@ -9,11 +9,11 @@ Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
 # Source0-md5:	131c34c8b66d8d7d74384839ed4091d0
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
+Patch0:		%{name}-optflags.patch
 URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	libxml2-devel >= 2.0
 BuildRequires:	magma-devel >= 0:1.01
 BuildRequires:	rpmbuild(macros) >= 1.268
-BuildRequires:	sed >= 4.0
 Requires(post,preun):	/sbin/chkconfig
 Requires:	magma >= 0:1.01
 Requires:	rc-scripts
@@ -42,8 +42,7 @@ Pliki nag³ówkowe i biblioteka statyczna ccs.
 
 %prep
 %setup -q -n cluster-%{version}
-cd %{name}
-%{__sed} -i -e 's/-O2/%{rpmcflags}/' {ccs_tool,ccs_test,lib,daemon}/Makefile
+%patch0 -p1
 
 %build
 cd %{name}
@@ -54,7 +53,9 @@ cd %{name}
 	--prefix=%{_prefix} \
 	--sbindir=%{_sbindir}
 %{__make} \
-	CC="%{__cc}"
+	CC="%{__cc}" \
+	LDFLAGS="%{rpmldflags}" \
+	OPTCFLAGS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
