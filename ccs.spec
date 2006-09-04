@@ -1,12 +1,12 @@
 Summary:	Cluster configuration system to manage the cluster config file
 Summary(pl):	System konfiguracji klastra do zarz±dzania jego plikiem konfiguracyjnym
 Name:		ccs
-Version:	1.02.00
+Version:	1.03.00
 Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
-# Source0-md5:	131c34c8b66d8d7d74384839ed4091d0
+# Source0-md5:	8eea23df70d2007c4fb8c234cfea49cf
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-optflags.patch
