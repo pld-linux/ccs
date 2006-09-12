@@ -71,7 +71,7 @@ touch $RPM_BUILD_ROOT%{_sysconfdir}/cluster/cluster.xml
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
-rm $RPM_BUILD_ROOT/etc/init.d/ccs
+rm $RPM_BUILD_ROOT/etc/init.d/ccsd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
