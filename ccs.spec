@@ -1,5 +1,5 @@
 Summary:	Cluster configuration system to manage the cluster config file
-Summary(pl):	System konfiguracji klastra do zarz±dzania jego plikiem konfiguracyjnym
+Summary(pl.UTF-8):   System konfiguracji klastra do zarzÄ…dzania jego plikiem konfiguracyjnym
 Name:		ccs
 Version:	1.03.00
 Release:	1
@@ -24,21 +24,21 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 Cluster configuration system to manage the cluster config file.
 
-%description -l pl
-System konfiguracji klastra do zarz±dzania jego plikiem
+%description -l pl.UTF-8
+System konfiguracji klastra do zarzÄ…dzania jego plikiem
 konfiguracyjnym.
 
 %package devel
 Summary:	Header files and static library for ccs
-Summary(pl):	Pliki nag³ówkowe i biblioteka statyczna ccs
+Summary(pl.UTF-8):   Pliki nagÅ‚Ã³wkowe i biblioteka statyczna ccs
 Group:		Development/Libraries
 # doesn't require base
 
 %description devel
 Header files and static library for ccs.
 
-%description devel -l pl
-Pliki nag³ówkowe i biblioteka statyczna ccs.
+%description devel -l pl.UTF-8
+Pliki nagÅ‚Ã³wkowe i biblioteka statyczna ccs.
 
 %prep
 %setup -q -n cluster-%{version}
