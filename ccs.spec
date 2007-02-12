@@ -1,5 +1,5 @@
 Summary:	Cluster configuration system to manage the cluster config file
-Summary(pl.UTF-8):   System konfiguracji klastra do zarządzania jego plikiem konfiguracyjnym
+Summary(pl.UTF-8):	System konfiguracji klastra do zarządzania jego plikiem konfiguracyjnym
 Name:		ccs
 Version:	1.03.00
 Release:	1
@@ -30,7 +30,7 @@ konfiguracyjnym.
 
 %package devel
 Summary:	Header files and static library for ccs
-Summary(pl.UTF-8):   Pliki nagłówkowe i biblioteka statyczna ccs
+Summary(pl.UTF-8):	Pliki nagłówkowe i biblioteka statyczna ccs
 Group:		Development/Libraries
 # doesn't require base
 
