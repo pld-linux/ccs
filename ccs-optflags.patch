@@ -31,8 +31,8 @@ diff -Nur cluster-1.02.00.orig/ccs/ccs_test/Makefile cluster-1.02.00.optflags/cc
 diff -Nur cluster-1.02.00.orig/ccs/ccs_tool/Makefile cluster-1.02.00.optflags/ccs/ccs_tool/Makefile
 --- cluster-1.02.00.orig/ccs/ccs_tool/Makefile	2005-05-12 17:17:39.000000000 +0200
 +++ cluster-1.02.00.optflags/ccs/ccs_tool/Makefile	2006-08-04 02:48:38.000000000 +0200
-@@ -17,20 +17,20 @@
- INCLUDE= -I. -I${top_srcdir}/config -I${top_srcdir}/include -I${ccs_libdir} -I${incdir}
+@@ -18,21 +18,21 @@
+ 	 -I../../cman/lib
  
  ifeq ($(DEBUG),y)
 -CFLAGS+= -Wall -O2 -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DDEBUG -g \
@@ -46,21 +46,23 @@ diff -Nur cluster-1.02.00.orig/ccs/ccs_tool/Makefile cluster-1.02.00.optflags/cc
  
 -LDFLAGS+= -L${ccs_libdir} `xml2-config --libs` -L${libdir}
 +LOADLIBES+= -L${ccs_libdir} `xml2-config --libs` -L${libdir}
- LOADLIBES+= -lccs -lmagma -lmagmamsg -ldl
+ LOADLIBES+= -lccs -ldl
  
  all: ccs_tool
  
  ccs_tool: ccs_tool.c update.c upgrade.c old_parser.c editconf.c
--	${CC} ${CFLAGS} ${INCLUDE} -o $@ $^ ${LDFLAGS} ${LOADLIBES}
-+	${CC} ${CFLAGS} ${LDFLAGS} ${INCLUDE} -o $@ $^ ${LOADLIBES}
+-	${CC} ${CFLAGS} ${INCLUDE} -o $@ $^ ${LDFLAGS} ${LOADLIBES} \
+-	../../cman/lib/libcman.a
++	${CC} ${CFLAGS} ${LDFLAGS} ${INCLUDE} -o $@ $^ ${LOADLIBES} \
++	-lcman
  
  clean:
  	rm -f *.o ccs_tool *~
 diff -Nur cluster-1.02.00.orig/ccs/daemon/Makefile cluster-1.02.00.optflags/ccs/daemon/Makefile
 --- cluster-1.02.00.orig/ccs/daemon/Makefile	2004-10-19 01:00:39.000000000 +0200
 +++ cluster-1.02.00.optflags/ccs/daemon/Makefile	2006-08-04 02:43:07.000000000 +0200
-@@ -18,14 +18,14 @@
- INCLUDE= -I. -I../include -I../common -I${top_srcdir}/config -I${incdir}
+@@ -19,20 +19,20 @@
+ INCLUDE= -I. -I../include -I../common -I${top_srcdir}/config -I../../cman/lib
  
  ifeq ($(DEBUG),y)
 -CFLAGS+= -Wall -O2 -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -DDEBUG -g \
@@ -72,19 +74,18 @@ diff -Nur cluster-1.02.00.orig/ccs/daemon/Makefile cluster-1.02.00.optflags/ccs/
  	`xml2-config --cflags` -DCCS_RELEASE_NAME=\"${RELEASE}\"
  endif
  
--LDFLAGS+= -L${libdir} `xml2-config --libs` -lpthread -lmagma -lmagmamsg -ldl
-+LIBS += -L${libdir} `xml2-config --libs` -lpthread -lmagma -lmagmamsg -ldl
+-LDFLAGS+= -L${libdir} `xml2-config --libs` -lpthread -ldl
++LIBS += -L${libdir} `xml2-config --libs` -lpthread -ldl
  
- all: ccsd
- 
-@@ -33,7 +33,7 @@
- 	cp ccsd ${top_srcdir}/bin
+ all: ${TARGET}
  
  ccsd: ccsd.c cnx_mgr.c cluster_mgr.c misc.c ../common/log.c globals.c
--	${CC} ${CFLAGS} ${INCLUDE} -o $@ $^ ${LDFLAGS}
-+	${CC} ${CFLAGS} ${LDFLAGS} ${INCLUDE} -o $@ $^ ${LIBS}
+-	${CC} ${CFLAGS} ${INCLUDE} -o $@ $^ ${LDFLAGS} \
+-	../../cman/lib/libcman.a
++	${CC} ${CFLAGS} ${LDFLAGS} ${INCLUDE} -o $@ $^ ${LIBS} \
++	-lcman
  
- install: ccsd
+ install: all
  	install -d ${sbindir}
 diff -Nur cluster-1.02.00.orig/ccs/lib/Makefile cluster-1.02.00.optflags/ccs/lib/Makefile
 --- cluster-1.02.00.orig/ccs/lib/Makefile	2004-08-03 18:39:14.000000000 +0200
@@ -93,11 +94,11 @@ diff -Nur cluster-1.02.00.orig/ccs/lib/Makefile cluster-1.02.00.optflags/ccs/lib
  INCLUDE = -I../include -I../common
  
  ifeq ($(DEBUG),y)
--CFLAGS+= -O2 -D_FILE_OFFSET_BITS=64 -DDEBUG -g
-+CFLAGS+= $(OPTCFLAGS) -D_FILE_OFFSET_BITS=64 -DDEBUG -g
+-CFLAGS+= -O2 -fPIC -D_FILE_OFFSET_BITS=64 -DDEBUG -g
++CFLAGS+= $(OPTCFLAGS) -fPIC -D_FILE_OFFSET_BITS=64 -DDEBUG -g
  else
--CFLAGS+= -O2 -D_FILE_OFFSET_BITS=64
-+CFLAGS+= $(OPTCFLAGS) -D_FILE_OFFSET_BITS=64
+-CFLAGS+= -O2 -fPIC -D_FILE_OFFSET_BITS=64
++CFLAGS+= $(OPTCFLAGS) -fPIC -D_FILE_OFFSET_BITS=64
  endif
   
  all: libccs.a

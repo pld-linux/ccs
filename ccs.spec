@@ -1,18 +1,18 @@
 Summary:	Cluster configuration system to manage the cluster config file
 Summary(pl.UTF-8):	System konfiguracji klastra do zarządzania jego plikiem konfiguracyjnym
 Name:		ccs
-Version:	1.03.00
+Version:	2.00.00
 Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
-# Source0-md5:	8eea23df70d2007c4fb8c234cfea49cf
+# Source0-md5:	2ef3f4ba9d3c87b50adfc9b406171085
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-optflags.patch
 URL:		http://sources.redhat.com/cluster/ccs/
+BuildRequires:	cman-devel >= 2
 BuildRequires:	libxml2-devel >= 2.0
-BuildRequires:	magma-devel >= 0:1.01
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post,preun):	/sbin/chkconfig
 Requires:	magma >= 0:1.01
@@ -70,8 +70,6 @@ touch $RPM_BUILD_ROOT%{_sysconfdir}/cluster/cluster.xml
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/%{name}
-
-rm $RPM_BUILD_ROOT/etc/init.d/ccsd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
