@@ -13,12 +13,11 @@ diff -ur cluster-2.00.00.orig/ccs/lib/libccs.c cluster-2.00.00/ccs/lib/libccs.c
 diff -ur cluster-2.00.00.orig/ccs/lib/Makefile cluster-2.00.00/ccs/lib/Makefile
 --- cluster-2.00.00.orig/ccs/lib/Makefile	2008-03-07 13:39:28.000000000 +0100
 +++ cluster-2.00.00/ccs/lib/Makefile	2008-03-07 13:47:19.000000000 +0100
-@@ -27,7 +27,7 @@
- libccs.a: libccs.o log.o
+@@ -28,6 +28,6 @@
  	${AR} cr libccs.a libccs.o log.o
  
--libccs.o: libccs.c ccs.h
-+libccs.o: libccs.c
- 	${CC} -c ${CFLAGS} ${INCLUDE} $^
+ libccs.o: libccs.c ccs.h
+-	${CC} -c ${CFLAGS} ${INCLUDE} $^
++	${CC} -c ${CFLAGS} ${INCLUDE} $<
  
  log.o: ../common/log.c
