@@ -2,7 +2,7 @@ Summary:	Cluster configuration system to manage the cluster config file
 Summary(pl.UTF-8):	System konfiguracji klastra do zarządzania jego plikiem konfiguracyjnym
 Name:		ccs
 Version:	2.00.00
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
@@ -10,6 +10,7 @@ Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-optflags.patch
+Patch1:		%{name}-include.patch
 URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	cman-devel >= 2
 BuildRequires:	libxml2-devel >= 2.0
@@ -42,6 +43,7 @@ Pliki nagłówkowe i biblioteka statyczna ccs.
 %prep
 %setup -q -n cluster-%{version}
 %patch0 -p1
+%patch1 -p1
 
 %build
 cd %{name}
