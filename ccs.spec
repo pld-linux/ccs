@@ -11,6 +11,7 @@ Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-optflags.patch
 Patch1:		%{name}-include.patch
+Patch2:		compile.patch
 URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	cman-devel >= 2
 BuildRequires:	libxml2-devel >= 2.0
@@ -44,6 +45,7 @@ Pliki nagłówkowe i biblioteka statyczna ccs.
 %setup -q -n cluster-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 cd %{name}
