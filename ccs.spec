@@ -1,17 +1,14 @@
 Summary:	Cluster configuration system to manage the cluster config file
 Summary(pl.UTF-8):	System konfiguracji klastra do zarządzania jego plikiem konfiguracyjnym
 Name:		ccs
-Version:	2.00.00
-Release:	2
+Version:	2.03.10
+Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	ftp://sources.redhat.com/pub/cluster/releases/cluster-%{version}.tar.gz
-# Source0-md5:	2ef3f4ba9d3c87b50adfc9b406171085
+# Source0-md5:	379b560096e315d4b52e238a5c72ba4a
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
-Patch0:		%{name}-optflags.patch
-Patch1:		%{name}-include.patch
-Patch2:		compile.patch
 URL:		http://sources.redhat.com/cluster/ccs/
 BuildRequires:	cman-devel >= 2
 BuildRequires:	libxml2-devel >= 2.0
@@ -43,29 +40,30 @@ Pliki nagłówkowe i biblioteka statyczna ccs.
 
 %prep
 %setup -q -n cluster-%{version}
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
-cd %{name}
 ./configure \
+	--cc="%{__cc}" \
+	--cflags="%{rpmcflags} -Wall" \
+	--ldflags="%{rpmldflags}" \
 	--incdir=%{_includedir} \
+	--ncursesincdir=%{_includedir}/ncurses \
 	--libdir=%{_libdir} \
+	--libexecdir=%{_libdir} \
 	--mandir=%{_mandir} \
 	--prefix=%{_prefix} \
-	--sbindir=%{_sbindir}
-%{__make} \
-	CC="%{__cc}" \
-	LDFLAGS="%{rpmldflags}" \
-	OPTCFLAGS="%{rpmcflags}"
+	--sbindir=%{_sbindir} \
+	--without_gfs \
+	--without_gfs2 \
+	--without_gnbd \
+	--without_kernel_modules
+%{__make} -C %{name}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-cd %{name}
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 
-%{__make} install \
+%{__make} -C %{name} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/cluster
@@ -89,7 +87,9 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_sbindir}/*
+%attr(755,root,root) %{_sbindir}/ccs_test
+%attr(755,root,root) %{_sbindir}/ccs_tool
+%attr(755,root,root) %{_sbindir}/ccsd
 %dir %{_sysconfdir}/cluster
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cluster/cluster.xml
 %{_mandir}/man5/cluster.conf.5*
