@@ -6,8 +6,6 @@
 # description:	ccsd
 #
 # processname:	ccsd
-# config:
-# pidfile:
 
 # Source function library.
 . /etc/rc.d/init.d/functions
